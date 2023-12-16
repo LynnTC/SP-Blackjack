@@ -11,3 +11,8 @@
 
 
 	/*----- functions -----*/
+    init ();
+
+    function init(){
+        
+    }
