@@ -2,7 +2,6 @@
 const suits = ['s', 'c', 'd', 'h']
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 const originalDeck = buildOriginalDeck();
-renderDeckInContainer(originalDeck, document.getElementById('original-deck-container'));
 
 /*----- state variables -----*/
 let money;
@@ -41,6 +40,7 @@ function handleDeal(){
 }
 
 function handleHit(){
+    pHand.cards.push(shuffledDeck.pop());
 
 }
 function handleStand(){
@@ -73,7 +73,8 @@ function handleBet(evt){
     renderBet();
     hideBetButtons();
     handleDeal();
-    renderHands(pHand.cards,'player-hand');
+    renderPHand(pHand.cards,document.getElementById('player-hand'));
+    renderDHand(dHand.cards,document.getElementById('dealer-hand'));
     render();
 }
 
@@ -81,6 +82,7 @@ function handleControls(evt){
     if (evt.target.tagName !== 'BUTTON') return;
 }
 
+//  TODO: Change hide/show functions to 1 function
 function hideBetButtons() {
     const betButtons = document.querySelectorAll('button[id^="bet"]');
     betButtons.forEach(button => {
@@ -146,13 +148,27 @@ function render(){
     renderHitStay();
 }
 
-function renderHands(hand, container) {
+function renderPHand(hand, container) {
     container.innerHTML = '';
     let cardsHtml = '';
     hand.forEach(function(card) {
       cardsHtml += `<div class="card ${card.face}"></div>`;
     });
     container.innerHTML = cardsHtml;
+}
+
+function renderDHand(hand, container) {
+    container.innerHTML = '';
+    let cardsHtml = '';
+    hand.forEach(function(card, index) {
+        if (index === 0) {
+            cardsHtml += '<div class="card face-down"></div>'
+        } else {
+            cardsHtml += `<div class="card ${card.face}"></div>`;
+        }
+    });
+    container.innerHTML = cardsHtml;
+
   }
 
 
@@ -196,18 +212,7 @@ function getNewShuffledDeck() {
   
   function renderNewShuffledDeck() {
     shuffledDeck = getNewShuffledDeck();
-    renderDeckInContainer(shuffledDeck, shuffledContainer);
   }
-  
-  function renderDeckInContainer(deck, container) {
-    container.innerHTML = '';
-    let cardsHtml = '';
-    deck.forEach(function(card) {
-      cardsHtml += `<div class="card ${card.face}"></div>`;
-    });
-    container.innerHTML = cardsHtml;
-  }
-  
   function buildOriginalDeck() {
     const deck = [];
     suits.forEach(function(suit) {

@@ -15,3 +15,7 @@ button {
 disabled {
     background-color: grey;
 }
+
+.face-down {
+    background-image: url('/css/card-library/images/backs/ZBackground.png');
+}
