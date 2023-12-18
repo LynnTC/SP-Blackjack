@@ -3,14 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Blackjack</title>
     <link href="css/main.css" rel="stylesheet"/>
+    <link href="css/card-library/css/cardstarter.css" rel="stylesheet" type="text/css" />
     <script defer src='js/main.js'></script>
 </head>
 <body>
-    <button>1</button>
-    <button>10</button>
-    <button>100</button>
-    <button>500</button>
+    <h2>Choose Bet Amount</h2>
+    <h2>Pool Temp</h2>
+    <h2 id="playMoney"></h2>
+    <h2>Bet Temp</h2>
+    <h2 id="betMoney"></h2>
+    <button id="bet10">10</button>
+    <button id="bet100">100</button>
+    <button id="bet500">500</button>
+    <button id="bet1000">1000</button>
+
+    <h3>Original Deck</h3>
+    <section id="original-deck-container" class="card-container"></section>
+    <button>RE-SHUFFLE DECK</button>
+    <h3>Shuffled Deck</h3>
+    <section id="shuffled-deck-container" class="card-container">
 </body>
 </html>
