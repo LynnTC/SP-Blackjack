@@ -13,10 +13,15 @@ let shuffledDeck;
 
 /*----- cached elements  -----*/
 const shuffledContainer = document.getElementById('shuffled-deck-container');
+const betBtns = document.querySelectorAll('#bet-amounts > button')
+const playerHandEl = document.getElementById('pHand.cards');
+const dealerHandEl = document.getElementById('dHand.cards');
 
 /*----- event listeners -----*/
-document.querySelector('body')
+document.getElementById('bet-amounts')
     .addEventListener('click', handleBet);
+document.getElementById('bet-controls')
+    .addEventListener('click', handleControls);
 
 document.querySelector('button').addEventListener('click', renderNewShuffledDeck);
 
@@ -24,14 +29,35 @@ document.querySelector('button').addEventListener('click', renderNewShuffledDeck
 
 init ();
 
+function handleDeal(){
+    while (pHand.cards.length < 2){
+    const dealtCard = shuffledDeck.pop();
+    pHand.cards.push(dealtCard);
+    }
+    while (dHand.cards.length < 2){
+    const dealtCard = shuffledDeck.pop();
+    dHand.cards.push(dealtCard);
+    }
+}
+
+function handleHit(){
+
+}
+function handleStand(){
+
+}
+function handleDouble(){
+
+}
+
 function init(){
     pHand = {
-        cards:'',
+        cards:[],
         value:0,
         amountBet:0
     };
     dHand = {
-        cards:'',
+        cards:[],
         value:0
     };
     winner = 't';
@@ -46,14 +72,25 @@ function handleBet(evt){
     money -= pHand.amountBet;
     renderBet();
     hideBetButtons();
+    handleDeal();
+    renderHands(pHand.cards,'player-hand');
     render();
 }
 
-function hideBetButtons(){
+function handleControls(evt){
+    if (evt.target.tagName !== 'BUTTON') return;
+}
+
+function hideBetButtons() {
     const betButtons = document.querySelectorAll('button[id^="bet"]');
-    betButtons.forEach(button =>{
+    betButtons.forEach(button => {
         button.style.display = 'none';
     });
+
+    const betTxt = document.getElementById('chooseBetTxt');
+    if (pHand.amountBet !== 0) {
+        betTxt.style.display = 'none';
+    }
 }
 
 function showBetButtons(){
@@ -61,6 +98,32 @@ function showBetButtons(){
     betButtons.forEach(button =>{
         button.style.display = '';
     })
+    const betTxt = document.getElementById('chooseBetTxt');
+    if (betTxt) {
+        betTxt.style.display = '';
+    }
+    
+}
+
+function renderHitStay(){
+    const hitBtn = document.getElementById('hit');
+    if (pHand.amountBet == 0){
+        hitBtn.style.display ='none';
+    } else {
+        hitBtn.style.display = '';
+    };
+    const stayBtn = document.getElementById('stay');
+    if (pHand.amountBet == 0){
+        stayBtn.style.display ='none';
+    } else {
+        stayBtn.style.display = '';
+    };
+    const doubleBtn = document.getElementById('double');
+    if (pHand.amountBet == 0){
+        doubleBtn.style.display ='none';
+    } else {
+        doubleBtn.style.display = '';
+    };
 }
 
 function renderMoney(){
@@ -73,53 +136,84 @@ function renderBet(){
     betEl.innerText = pHand.amountBet;
 }
 
-function render(){
-    renderMoney();
+function renderCards() {
+
 }
 
-/*----- functions -----*/
+function render(){
+    renderMoney();
+    renderBetButtons();
+    renderHitStay();
+}
+
+function renderHands(hand, container) {
+    container.innerHTML = '';
+    let cardsHtml = '';
+    hand.forEach(function(card) {
+      cardsHtml += `<div class="card ${card.face}"></div>`;
+    });
+    container.innerHTML = cardsHtml;
+  }
+
+
+function renderBetButtons(){
+    const bet100Button = document.getElementById('bet100');
+    if (money < 100) {
+        bet100Button.disabled = true;
+        bet100Button.classList.add('disabled');
+    } else {
+        bet100Button.disabled = false;
+        bet100Button.classList.remove('disabled');
+    }
+    const bet500Button = document.getElementById('bet500');
+    if (money < 500) {
+        bet500Button.disabled = true;
+        bet500Button.classList.add('disabled');
+    } else {
+        bet500Button.disabled = false;
+        bet500Button.classList.remove('disabled');
+    }
+    const bet1000Button = document.getElementById('bet1000');
+    if (money < 1000) {
+        bet1000Button.disabled = true;
+        bet100Button.classList.add('disabled');
+    } else {
+        bet1000Button.disabled = false;
+        bet1000Button.classList.remove('disabled');
+    }
+}
+
+/*----- deck functions -----*/
 function getNewShuffledDeck() {
-    // Create a copy of the originalDeck (leave originalDeck untouched!)
     const tempDeck = [...originalDeck];
     const newShuffledDeck = [];
     while (tempDeck.length) {
-      // Get a random index for a card still in the tempDeck
       const rndIdx = Math.floor(Math.random() * tempDeck.length);
-      // Note the [0] after splice - this is because splice always returns an array and we just want the card object in that array
       newShuffledDeck.push(tempDeck.splice(rndIdx, 1)[0]);
     }
     return newShuffledDeck;
   }
   
   function renderNewShuffledDeck() {
-    // Create a copy of the originalDeck (leave originalDeck untouched!)
     shuffledDeck = getNewShuffledDeck();
     renderDeckInContainer(shuffledDeck, shuffledContainer);
   }
   
   function renderDeckInContainer(deck, container) {
     container.innerHTML = '';
-    // Let's build the cards as a string of HTML
     let cardsHtml = '';
     deck.forEach(function(card) {
       cardsHtml += `<div class="card ${card.face}"></div>`;
     });
-    // Or, use reduce to 'reduce' the array into a single thing - in this case a string of HTML markup 
-    // const cardsHtml = deck.reduce(function(html, card) {
-    //   return html + `<div class="card ${card.face}"></div>`;
-    // }, '');
     container.innerHTML = cardsHtml;
   }
   
   function buildOriginalDeck() {
     const deck = [];
-    // Use nested forEach to generate card objects
     suits.forEach(function(suit) {
       ranks.forEach(function(rank) {
         deck.push({
-          // The 'face' property maps to the library's CSS classes for cards
           face: `${suit}${rank}`,
-          // Setting the 'value' property for game of blackjack, not war
           value: Number(rank) || (rank === 'A' ? 11 : 10)
         });
       });

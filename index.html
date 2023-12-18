@@ -9,20 +9,33 @@
     <script defer src='js/main.js'></script>
 </head>
 <body>
-    <h2>Choose Bet Amount</h2>
+    <h2 id="chooseBetTxt">Choose Bet Amount</h2>
     <h2>Pool Temp</h2>
     <h2 id="playMoney"></h2>
     <h2>Bet Temp</h2>
-    <h2 id="betMoney"></h2>
-    <button id="bet10">10</button>
-    <button id="bet100">100</button>
-    <button id="bet500">500</button>
-    <button id="bet1000">1000</button>
+    <div id="bet-amounts">
+        <h2 id="betMoney"></h2>
+            <button id="bet10">10</button>
+            <button id="bet100">100</button>
+            <button id="bet500">500</button>
+            <button id="bet1000">1000</button>
+        </div>
+    <div id="bet-controls">
+        <button id="hit">hit</button>
+        <button id="stay">stay</button>
+        <button id="double">double</button>
+    </div>
+    <button>music</button>
 
+    <section id="player-hand"></section>
+    <section id="dealer-hand"></section>
+
+    <section id="deck-display">
     <h3>Original Deck</h3>
     <section id="original-deck-container" class="card-container"></section>
     <button>RE-SHUFFLE DECK</button>
     <h3>Shuffled Deck</h3>
     <section id="shuffled-deck-container" class="card-container">
+    </section>
 </body>
 </html>
