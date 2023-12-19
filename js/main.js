@@ -9,6 +9,7 @@ let pHand;
 let dHand;
 let winner;
 let shuffledDeck;
+let turn;
 
 /*----- cached elements  -----*/
 const shuffledContainer = document.getElementById('shuffled-deck-container');
@@ -29,6 +30,7 @@ document.querySelector('button').addEventListener('click', renderNewShuffledDeck
 init ();
 
 function handleDeal(){
+    turn = 1;
     while (pHand.cards.length < 2){
     const dealtCard = shuffledDeck.pop();
     pHand.cards.push(dealtCard);
@@ -40,7 +42,7 @@ function handleDeal(){
     }
     handleAces(pHand.cards);
     pHand.value = pHand.cards[0].value += pHand.cards[1].value
-    if (pHand.value == 21 && pHand.length == 2){
+    if (pHand.value === 21 && pHand.length === 2){
         console.log("blackjack");
     }
 
@@ -52,9 +54,9 @@ function handleHit(){
     console.log(dealtCard);
     renderPHand(pHand.cards,document.getElementById('player-hand'));
     pHand.value += dealtCard.value;
-    if (dealtCard.face =='A') {
+    if (dealtCard.face === 'A') {
         pHand.aces += 1;
-    }
+      }
     if (pHand.value > 21 && pHand.aces > 0){
         pHand.value -= 10;
         pHand.aces -= 1;
@@ -63,6 +65,7 @@ function handleHit(){
     if(pHand.value > 21 ) {
         console.log("bust");
         console.log(pHand.value)
+        endTurn();
     } else {
         return;
     }
@@ -77,11 +80,14 @@ function handleAces(){
     });
     pHand.aces = acesAmt
 }
-function handleStand(){
 
-}
 function handleDouble(){
-
+    const dealtCard = shuffledDeck.pop();
+    pHand.cards.push(dealtCard);
+    console.log(dealtCard);
+    renderPHand(pHand.cards,document.getElementById('player-hand'));
+    pHand.value += dealtCard.value;
+    endTurn();
 }
 
 function init(){
@@ -117,6 +123,10 @@ function handleControls(evt){
     if (evt.target.tagName !== 'BUTTON') return;
     if (evt.target.id === 'hit'){
         handleHit();
+    } if (evt.target.id === 'double'){
+        handleDouble();
+    } if (evt.target.id === 'stay'){
+        endTurn();
     }
 }
 
@@ -237,6 +247,13 @@ function renderBetButtons(){
     }
 }
 
+function endTurn(){
+    const betBtns = document.querySelectorAll('#bet-controls button');
+    for (const btn of betBtns){
+        btn.disabled = true;
+    }
+
+}
 /*----- deck functions -----*/
 function getNewShuffledDeck() {
     const tempDeck = [...originalDeck];

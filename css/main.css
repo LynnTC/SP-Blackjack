@@ -11,11 +11,16 @@ button {
     background-color: blue;
     justify-content: space-around;
   }
-
 disabled {
     background-color: grey;
 }
-
+body {
+  background-image: url('/css/backgrounds/24fbd7a77e122b64803375ded2193d83.jpg');
+  background-size: cover;
+}
+h2{
+  color:white;
+}
 .face-down {
     background-image: url('/css/card-library/images/backs/ZBackground.png');
 }
