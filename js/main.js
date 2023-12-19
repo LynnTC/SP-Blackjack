@@ -33,15 +33,49 @@ function handleDeal(){
     const dealtCard = shuffledDeck.pop();
     pHand.cards.push(dealtCard);
     }
+    
     while (dHand.cards.length < 2){
     const dealtCard = shuffledDeck.pop();
     dHand.cards.push(dealtCard);
     }
+    handleAces(pHand.cards);
+    pHand.value = pHand.cards[0].value += pHand.cards[1].value
+    if (pHand.value == 21 && pHand.length == 2){
+        console.log("blackjack");
+    }
+
 }
 
 function handleHit(){
-    pHand.cards.push(shuffledDeck.pop());
+    const dealtCard = shuffledDeck.pop();
+    pHand.cards.push(dealtCard);
+    console.log(dealtCard);
+    renderPHand(pHand.cards,document.getElementById('player-hand'));
+    pHand.value += dealtCard.value;
+    if (dealtCard.face =='A') {
+        pHand.aces += 1;
+    }
+    if (pHand.value > 21 && pHand.aces > 0){
+        pHand.value -= 10;
+        pHand.aces -= 1;
+        console.log("ace convert");
+    } 
+    if(pHand.value > 21 ) {
+        console.log("bust");
+        console.log(pHand.value)
+    } else {
+        return;
+    }
+}
 
+function handleAces(){
+    let acesAmt = 0;
+    pHand.cards.forEach(card => {
+        if (card.face.includes('A')) {
+            acesAmt += 1;
+        }
+    });
+    pHand.aces = acesAmt
 }
 function handleStand(){
 
@@ -54,7 +88,8 @@ function init(){
     pHand = {
         cards:[],
         value:0,
-        amountBet:0
+        amountBet:0,
+        aces:0,
     };
     dHand = {
         cards:[],
@@ -80,9 +115,12 @@ function handleBet(evt){
 
 function handleControls(evt){
     if (evt.target.tagName !== 'BUTTON') return;
+    if (evt.target.id === 'hit'){
+        handleHit();
+    }
 }
 
-//  TODO: Change hide/show functions to 1 function
+//  TODO: Change hide/show buttons functions to 1 function
 function hideBetButtons() {
     const betButtons = document.querySelectorAll('button[id^="bet"]');
     betButtons.forEach(button => {
