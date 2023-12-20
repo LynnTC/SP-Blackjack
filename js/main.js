@@ -9,10 +9,8 @@ let pHand;
 let dHand;
 let winner;
 let shuffledDeck;
-let turn;
 
 /*----- cached elements  -----*/
-const shuffledContainer = document.getElementById('shuffled-deck-container');
 const betBtns = document.querySelectorAll('#bet-amounts > button')
 const playerHandEl = document.getElementById('pHand.cards');
 const dealerHandEl = document.getElementById('dHand.cards');
@@ -30,7 +28,6 @@ document.querySelector('button').addEventListener('click', renderNewShuffledDeck
 init ();
 
 function handleDeal(){
-    turn = 1;
     while (pHand.cards.length < 2){
     const dealtCard = shuffledDeck.pop();
     pHand.cards.push(dealtCard);
@@ -39,13 +36,12 @@ function handleDeal(){
     while (dHand.cards.length < 2){
     const dealtCard = shuffledDeck.pop();
     dHand.cards.push(dealtCard);
+    } if (pHand.value === 21 && pHand.length === 2){
+        console.log("blackjack");
     }
     handleAces(pHand.cards);
     pHand.value = pHand.cards[0].value += pHand.cards[1].value
-    if (pHand.value === 21 && pHand.length === 2){
-        console.log("blackjack");
-    }
-
+    dHand.value = dHand.cards[0].value += dHand.cards[1].value
 }
 
 function handleHit(){
@@ -186,9 +182,16 @@ function renderBet(){
     betEl.innerText = pHand.amountBet;
 }
 
-function renderCards() {
-
+function dealerTurn(){
+    if (dHand.value < 17){
+        const dealtCard = shuffledDeck.pop();
+        dHand.cards.push(dealtCard);
+        console.log(dealtCard);
+        renderDHand(dHand.cards,document.getElementById('dealer-hand'));
+        dHand.value += dealtCard.value;
+    }
 }
+
 
 function render(){
     renderMoney();
@@ -252,6 +255,7 @@ function endTurn(){
     for (const btn of betBtns){
         btn.disabled = true;
     }
+    dealerTurn();
 
 }
 /*----- deck functions -----*/
