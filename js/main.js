@@ -24,20 +24,22 @@ document.getElementById('bet-controls')
 init ();
 
 function handleDeal(){
+    let dealtCard = 0;
     while (pHand.cards.length < 2){
     const dealtCard = shuffledDeck.pop();
     pHand.cards.push(dealtCard);
     }
-    
     while (dHand.cards.length < 2){
     const dealtCard = shuffledDeck.pop();
     dHand.cards.push(dealtCard);
-    } if (pHand.value === 21 && pHand.length === 2){
-        console.log("blackjack");
+    } if (pHand.value === 21 && pHand.cards.length === 2){
+        endRound();
     }
-    handleAces(pHand.cards);
-    pHand.value = pHand.cards[0].value += pHand.cards[1].value
-    dHand.value = dHand.cards[0].value += dHand.cards[1].value
+    pHand.value = pHand.cards[0].value + pHand.cards[1].value
+    dHand.value = dHand.cards[0].value + dHand.cards[1].value
+    renderPHand(pHand.cards,document.getElementById('player-hand'));
+    renderDHand(dHand.cards,document.getElementById('dealer-hand'));
+    betBtnEn();
 }
 
 function handleHit(){
@@ -55,7 +57,7 @@ function handleHit(){
         console.log("ace convert");
     } 
     if(pHand.value > 21 ) {
-        buttonDis();
+        betBtnDis();
         console.log("bust");
         console.log(pHand.value)
         dealerTurn();
@@ -65,24 +67,21 @@ function handleHit(){
     }
 }
 
-function handleAces(){
-    let acesAmt = 0;
-    pHand.cards.forEach(card => {
-        if (card.face.includes('A')) {
-            acesAmt += 1;
-        }
-    });
-    pHand.aces = acesAmt
-}
 
 function handleDouble(){
     const dealtCard = shuffledDeck.pop();
     pHand.cards.push(dealtCard);
     console.log(dealtCard);
     renderPHand(pHand.cards,document.getElementById('player-hand'));
+    money -= pHand.amountBet
+    pHand.amountBet *= 2
     pHand.value += dealtCard.value;
-    buttonDis();
-    dealerTurn();
+    betBtnDis();
+    if (pHand.value > 21){
+        endRound();
+    } else {
+        dealerTurn();
+    }
 }
 
 function init(){
@@ -106,11 +105,8 @@ function handleBet(evt){
     if (evt.target.tagName !== 'BUTTON') return;
     pHand.amountBet = parseInt(evt.target.innerText);
     money -= pHand.amountBet;
-    renderBet();
     hideBetButtons();
     handleDeal();
-    renderPHand(pHand.cards,document.getElementById('player-hand'));
-    renderDHand(dHand.cards,document.getElementById('dealer-hand'));
     render();
 }
 
@@ -121,7 +117,7 @@ function handleControls(evt){
     } if (evt.target.id === 'double'){
         handleDouble();
     } if (evt.target.id === 'stay'){
-        buttonDis();
+        betBtnDis();
         dealerTurn();
     }
 }
@@ -195,16 +191,17 @@ function dealerTurn(){
 }
 
 function endRound() {
+    revealDealer();
     if (pHand.value > dHand.value && pHand.value <= 21){
         console.log ('playerwins')
         playerWin();
-    } if (pHand.value < dHand.value && dHand.value <= 21 ) {
+    } else if (pHand.value < dHand.value && dHand.value <= 21 ) {
         console.log ('dealer wins')
         playerLose();
-    } if (pHand.value <= 21 && dHand.value > 21) {
+    } else if (pHand.value <= 21 && dHand.value > 21) {
         console.log ('player wins')
         playerWin();
-    } if (pHand.value == dHand.value) {
+    } else if (pHand.value == dHand.value) {
         console.log ('tie')
         tieGame();
     }
@@ -214,24 +211,41 @@ function playerWin(){
     pHand.amountBet *= 2;
     money += pHand.amountBet;
     pHand.amountBet = 0;
-    renderMoney();
-    renderBet();
+    render();
+    getNewShuffledDeck();
+    showBetButtons();
+    clearCards();
 }
 
 function playerLose(){
     pHand.amountBet = 0;
-    renderBet();
+    render();
+    getNewShuffledDeck();
+    showBetButtons();
+    clearCards();
 }
 
 function tieGame(){
-
+    render();
+    getNewShuffledDeck();
+    clearCards();
+    handleDeal();
 }
 function render(){
     renderMoney();
     renderBetButtons();
     renderHitStay();
+    renderBet();
 }
 
+function clearCards(){
+    pHand.cards = [];
+    dHand.cards = [];
+    pHand.value = 0;
+    dHand.value = 0;
+    renderPHand(pHand.cards,document.getElementById('player-hand'));
+    renderDHand(dHand.cards,document.getElementById('dealer-hand'));
+}
 function renderPHand(hand, container) {
     container.innerHTML = '';
     let cardsHtml = '';
@@ -255,6 +269,10 @@ function renderDHand(hand, container) {
 
   }
 
+function revealDealer() {
+    const container = document.getElementById('dealer-hand');
+    container.children[0].className = `card ${dHand.cards[0].face}`;
+}
 
 function renderBetButtons(){
     const bet100Button = document.getElementById('bet100');
@@ -283,10 +301,17 @@ function renderBetButtons(){
     }
 }
 
-function buttonDis(){
+function betBtnDis(){
     const betBtns = document.querySelectorAll('#bet-controls button');
     for (const btn of betBtns){
         btn.disabled = true;
+    }
+}
+
+function betBtnEn(){
+    const betBtns = document.querySelectorAll('#bet-controls button');
+    for (const btn of betBtns){
+        btn.disabled = false;
     }
 }
 /*----- deck functions -----*/
@@ -297,12 +322,9 @@ function getNewShuffledDeck() {
       const rndIdx = Math.floor(Math.random() * tempDeck.length);
       newShuffledDeck.push(tempDeck.splice(rndIdx, 1)[0]);
     }
-    return newShuffledDeck;
+    shuffledDeck = newShuffledDeck;
   }
-  
-  function renderNewShuffledDeck() {
-    shuffledDeck = getNewShuffledDeck();
-  }
+
   function buildOriginalDeck() {
     const deck = [];
     suits.forEach(function(suit) {
@@ -316,4 +338,4 @@ function getNewShuffledDeck() {
     return deck;
   }
   
-  renderNewShuffledDeck();
+  getNewShuffledDeck();
