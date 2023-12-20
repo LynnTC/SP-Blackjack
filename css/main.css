@@ -17,12 +17,12 @@ disabled {
 body {
   width: 100vw;
   height: 100vh;
-  background-image: url('/css/backgrounds/townbg.jpg');
+  background-image: url('css/backgrounds/townbg.jpg');
   background-size: cover;
 }
 h2{
   color:white;
 }
 .face-down {
-    background-image: url('/css/card-library/images/backs/ZBackground.png');
+    background-image: url('css/card-library/images/backs/ZBackground.png');
 }
