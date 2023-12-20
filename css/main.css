@@ -17,7 +17,7 @@ disabled {
 body {
   width: 100vw;
   height: 100vh;
-  background-image: url('/css/backgrounds/town.jpg');
+  background-image: url('/css/backgrounds/townbg.jpg');
   background-size: cover;
 }
 h2{
