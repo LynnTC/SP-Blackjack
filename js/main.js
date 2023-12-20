@@ -11,17 +11,13 @@ let winner;
 let shuffledDeck;
 
 /*----- cached elements  -----*/
-const betBtns = document.querySelectorAll('#bet-amounts > button')
-const playerHandEl = document.getElementById('pHand.cards');
-const dealerHandEl = document.getElementById('dHand.cards');
+const betBtns = document.querySelectorAll('#bet-amounts > button');
 
 /*----- event listeners -----*/
 document.getElementById('bet-amounts')
     .addEventListener('click', handleBet);
 document.getElementById('bet-controls')
     .addEventListener('click', handleControls);
-
-document.querySelector('button').addEventListener('click', renderNewShuffledDeck);
 
 /*----- functions -----*/
 
@@ -59,9 +55,11 @@ function handleHit(){
         console.log("ace convert");
     } 
     if(pHand.value > 21 ) {
+        buttonDis();
         console.log("bust");
         console.log(pHand.value)
-        endTurn();
+        dealerTurn();
+        endRound();
     } else {
         return;
     }
@@ -83,7 +81,8 @@ function handleDouble(){
     console.log(dealtCard);
     renderPHand(pHand.cards,document.getElementById('player-hand'));
     pHand.value += dealtCard.value;
-    endTurn();
+    buttonDis();
+    dealerTurn();
 }
 
 function init(){
@@ -122,7 +121,8 @@ function handleControls(evt){
     } if (evt.target.id === 'double'){
         handleDouble();
     } if (evt.target.id === 'stay'){
-        endTurn();
+        buttonDis();
+        dealerTurn();
     }
 }
 
@@ -183,16 +183,49 @@ function renderBet(){
 }
 
 function dealerTurn(){
-    if (dHand.value < 17){
+    while (dHand.value < 17){
         const dealtCard = shuffledDeck.pop();
         dHand.cards.push(dealtCard);
         console.log(dealtCard);
         renderDHand(dHand.cards,document.getElementById('dealer-hand'));
         dHand.value += dealtCard.value;
+    } if (dHand.value >= 17 ){
+        endRound();
     }
 }
 
+function endRound() {
+    if (pHand.value > dHand.value && pHand.value <= 21){
+        console.log ('playerwins')
+        playerWin();
+    } if (pHand.value < dHand.value && dHand.value <= 21 ) {
+        console.log ('dealer wins')
+        playerLose();
+    } if (pHand.value <= 21 && dHand.value > 21) {
+        console.log ('player wins')
+        playerWin();
+    } if (pHand.value == dHand.value) {
+        console.log ('tie')
+        tieGame();
+    }
+}
 
+function playerWin(){
+    pHand.amountBet *= 2;
+    money += pHand.amountBet;
+    pHand.amountBet = 0;
+    renderMoney();
+    renderBet();
+}
+
+function playerLose(){
+    pHand.amountBet = 0;
+    renderBet();
+}
+
+function tieGame(){
+
+}
 function render(){
     renderMoney();
     renderBetButtons();
@@ -250,13 +283,11 @@ function renderBetButtons(){
     }
 }
 
-function endTurn(){
+function buttonDis(){
     const betBtns = document.querySelectorAll('#bet-controls button');
     for (const btn of betBtns){
         btn.disabled = true;
     }
-    dealerTurn();
-
 }
 /*----- deck functions -----*/
 function getNewShuffledDeck() {
