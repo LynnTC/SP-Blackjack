@@ -4,7 +4,10 @@ const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', '
 const originalDeck = buildOriginalDeck();
 const vsSound = new Audio('../css/audio-library/verses.wav');
 const cardSound = new Audio('../css/audio-library/cardsound.mp3');
-
+const gideonSound = new Audio('../css/audio-library/gideonbg.wav');
+const lucasSound = new Audio('../css/audio-library/lucasbg.wav');
+const wallaceSound = new Audio('../css/audio-library/wallacebg.wav');
+const scottSound = new Audio('../css/audio-library/scottbg.wav');
 /*----- state variables -----*/
 let money;
 let pHand;
@@ -37,6 +40,7 @@ function handleDeal(){
         endRound();
     }
     hideBetButtons();
+    betConEn();
     pHand.value = pHand.cards[0].value + pHand.cards[1].value
     dHand.value = dHand.cards[0].value + dHand.cards[1].value
     setTimeout(() => {
@@ -48,7 +52,8 @@ function handleDeal(){
         renderDHand(dHand.cards,document.getElementById('dealer-hand'));
     }, 2000);
     setTimeout(() => {
-        betConEn(); 
+        renderHitStay();
+        
     }, 3000);
 }
 
@@ -169,7 +174,6 @@ function showBetButtons(){
 }
 
 function renderHitStay(){
-    setTimeout(() => {
         const hitBtn = document.getElementById('hit');
         if (pHand.amountBet == 0){
             hitBtn.style.display ='none';
@@ -188,7 +192,6 @@ function renderHitStay(){
         } else {
             doubleBtn.style.display = '';
         };
-    }, 3000);
 }
 
 function renderMoney(){
@@ -203,11 +206,13 @@ function renderBet(){
 
 function dealerTurn(){
     while (dHand.value < 17){
-        const dealtCard = shuffledDeck.pop();
-        dHand.cards.push(dealtCard);
-        console.log(dealtCard);
-        renderDHand(dHand.cards,document.getElementById('dealer-hand'));
-        dHand.value += dealtCard.value;
+        setTimeout(() => {
+            const dealtCard = shuffledDeck.pop();
+            dHand.cards.push(dealtCard);
+            console.log(dealtCard);
+            renderDHand(dHand.cards,document.getElementById('dealer-hand'));
+            dHand.value += dealtCard.value;
+        }, 2000);
     } if (dHand.value >= 17 ){
         revealDealer();
         setTimeout(() => {
@@ -217,21 +222,33 @@ function dealerTurn(){
 }
 
 function endRound() {
+
     if (pHand.value > dHand.value && pHand.value <= 21){
         console.log ('playerwins')
+        bgPause();
         playerWin();
     } else if (pHand.value < dHand.value && dHand.value <= 21 ) {
         console.log ('dealer wins')
+        bgPause();
         playerLose();
     } else if (pHand.value <= 21 && dHand.value > 21) {
         console.log ('player wins')
+        bgPause();
         playerWin();
     } else if (pHand.value == dHand.value) {
         console.log ('tie')
         tieGame();
     } else if (pHand.value > 21) {
+        bgPause();
         playerLose();
     }
+}
+
+function bgPause(){
+    gideonSound.pause();
+    lucasSound.pause();
+    scottSound.pause();
+    wallaceSound.pause();
 }
 
 function playerWin(){
@@ -242,6 +259,7 @@ function playerWin(){
     getNewShuffledDeck();
     showBetButtons();
     clearCards();
+    renderHitStay();
 }
 
 function playerLose(){
@@ -250,12 +268,15 @@ function playerLose(){
     getNewShuffledDeck();
     showBetButtons();
     clearCards();
+    renderHitStay();
 }
 
 function tieGame(){
     render();
     getNewShuffledDeck();
     clearCards();
+    renderHitStay();
+    handleDeal();
 }
 
 function gameOver(){
@@ -268,7 +289,6 @@ function gameUnover(){
 function render(){
     renderMoney();
     renderBetButtons();
-    renderHitStay();
     renderBet();
 }
 
@@ -365,11 +385,23 @@ function renderVS(){
     img.id = 'bossVs';
     if (pHand.amountBet === 10) {
         img.src = '../images/bossportraits/wallacevs.png';
+        setTimeout(() => {
+            wallaceSound.play();
+        }, 8000);
     } else if (pHand.amountBet === 100) {
         img.src = '../images/bossportraits/lucasvs.png';
+        setTimeout(() => {
+            lucasSound.play();
+        }, 8000);
     } else if (pHand.amountBet === 500) {
         img.src = '../images/bossportraits/gideonvs.png';
+        setTimeout(() => {
+            gideonSound.play();
+        }, 8000);
     } else if (pHand.amountBet === 1000) {
+        setTimeout(() => {
+           scottSound.play();
+        }, 8000);
         img.src = '../images/bossportraits/scottvs.png';
     } 
     document.body.appendChild(img);
