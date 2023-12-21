@@ -35,7 +35,7 @@ button {
   width: 150px;
   }
 disabled {
-    background-color: grey;
+    background-color: rgb(97, 0, 0)
 }
 body {
   width: 100vw;

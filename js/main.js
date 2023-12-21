@@ -2,6 +2,7 @@
 const suits = ['s', 'c', 'd', 'h']
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 const originalDeck = buildOriginalDeck();
+const vsSound = new Audio('../css/audio-library/verses.wav');
 
 /*----- state variables -----*/
 let money;
@@ -99,9 +100,14 @@ function handleBet(evt){
     if (evt.target.tagName !== 'BUTTON') return;
     pHand.amountBet = parseInt(evt.target.innerText);
     money -= pHand.amountBet;
-    hideBetButtons();
-    handleDeal();
-    render();
+    vsSound.play();
+    renderVS();
+    setTimeout(() => {
+        hideBetButtons();
+        handleDeal();
+        render();
+    }, 5000);
+    
 }
 
 function handleControls(evt){
@@ -122,7 +128,10 @@ function hideBetButtons() {
     betButtons.forEach(button => {
         button.style.display = 'none';
     });
-
+    const bossPortraits = document.querySelectorAll('[id=bossportraits]');
+    bossPortraits.forEach(bossPortrait => {
+        bossPortrait.style.display = 'none';
+    });
     const betTxt = document.getElementById('chooseBetTxt');
     if (pHand.amountBet !== 0) {
         betTxt.style.display = 'none';
@@ -326,6 +335,48 @@ function betBtnEn(){
     const betBtns = document.querySelectorAll('#bet-controls button');
     for (const btn of betBtns){
         btn.disabled = false;
+    }
+}
+
+function renderVS(){
+    let img = new Image(),
+    width,
+    screenWidth = window.innerWidth,
+    duration = 5000;
+    if (pHand.amountBet === 10) {
+        img.src = '../images/bossportraits/wallacevs.png';
+    } else if (pHand.amountBet === 100) {
+        img.src = '../images/bossportraits/lucasvs.png';
+    } else if (pHand.amountBet === 500) {
+        img.src = '../images/bossportraits/gideonvs.png';
+    } else if (pHand.amountBet === 1000) {
+        img.src = '../images/bossportraits/scottvs.png';
+    } 
+    img.style.zIndex = 100;
+    document.body.appendChild(img);
+
+ 
+    img.onload = function () {
+        width = img.width;
+        animateDealer();
+    };
+
+    function animateDealer() {
+        img.style.right = width + 'px';
+        let currentPosition = parseInt(img.style.right, 10) || 0;
+
+        function move() {
+            currentPosition += 1;
+            img.style.right = currentPosition + 'px';
+
+            if (currentPosition < screenWidth) {
+                requestAnimationFrame(move);
+            } else {
+                // Animation complete
+            }
+        }
+
+        move();
     }
 }
 /*----- deck functions -----*/
