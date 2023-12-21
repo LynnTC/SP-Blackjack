@@ -6,7 +6,17 @@ html {
     height: 100%;
     width: 100%;
   }
+#player-hand{
+  position: absolute;
+  top: 75%;
+  height: 100px
 
+}
+
+#dealer-hand{
+  position: absolute;
+  top: 5%;
+}
 #gameboard{
   width: 70%;
   height: 55%;
@@ -23,7 +33,13 @@ html {
   display: flex;
   flex-direction: column;
 }
-
+#bet-controls{
+  display: none;
+}
+#bossVs{
+  border-radius: 15px;
+  border: 15px solid black;
+}
 button {
   font-family:"Superfly";
   border-radius: 8px;
@@ -34,7 +50,7 @@ button {
   border: none;
   width: 150px;
   }
-disabled {
+#disabled {
     background-color: rgb(97, 0, 0)
 }
 body {
@@ -72,3 +88,7 @@ h2{
     background-image: url('../css/card-library/images/backs/ZBackground.png');
 }
 
+#gideonvs.jpg{
+  position: absolute; /* or relative, depending on your layout */
+  display: block; /* or inline-block */
+}

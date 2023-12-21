@@ -3,6 +3,7 @@ const suits = ['s', 'c', 'd', 'h']
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 const originalDeck = buildOriginalDeck();
 const vsSound = new Audio('../css/audio-library/verses.wav');
+const cardSound = new Audio('../css/audio-library/cardsound.mp3');
 
 /*----- state variables -----*/
 let money;
@@ -35,19 +36,28 @@ function handleDeal(){
     } if (pHand.value === 21 && pHand.cards.length === 2){
         endRound();
     }
+    hideBetButtons();
     pHand.value = pHand.cards[0].value + pHand.cards[1].value
     dHand.value = dHand.cards[0].value + dHand.cards[1].value
-    renderPHand(pHand.cards,document.getElementById('player-hand'));
-    renderDHand(dHand.cards,document.getElementById('dealer-hand'));
-    betBtnEn();
+    setTimeout(() => {
+        cardSound.play();
+        renderPHand(pHand.cards,document.getElementById('player-hand'));
+    }, 1000);
+    setTimeout(() => {
+        cardSound.play();
+        renderDHand(dHand.cards,document.getElementById('dealer-hand'));
+    }, 2000);
+    setTimeout(() => {
+        betConEn(); 
+    }, 3000);
 }
 
 function handleHit(){
     const dealtCard = shuffledDeck.pop();
     pHand.cards.push(dealtCard);
-    console.log(dealtCard);
     renderPHand(pHand.cards,document.getElementById('player-hand'));
     pHand.value += dealtCard.value;
+    cardSound.play();
     if (dealtCard.face === 'A') {
         pHand.aces += 1;
       }
@@ -57,10 +67,13 @@ function handleHit(){
         console.log("ace convert");
     } 
     if(pHand.value > 21 ) {
-        betBtnDis();
+        betConDis();
         console.log("bust");
         console.log(pHand.value)
-        endRound();
+        setTimeout(() => {
+            endRound();
+        }, 2000);
+        
     } else {
         return;
     }
@@ -68,6 +81,7 @@ function handleHit(){
 
 
 function handleDouble(){
+    cardSound.play();
     const dealtCard = shuffledDeck.pop();
     pHand.cards.push(dealtCard);
     console.log(dealtCard);
@@ -75,8 +89,10 @@ function handleDouble(){
     money -= pHand.amountBet
     pHand.amountBet *= 2
     pHand.value += dealtCard.value;
-    betBtnDis();
-    endRound();
+    betConDis();
+    setTimeout(() => {
+        endRound();
+    }, 1000);
 }
 
 function init(){
@@ -103,7 +119,6 @@ function handleBet(evt){
     vsSound.play();
     renderVS();
     setTimeout(() => {
-        hideBetButtons();
         handleDeal();
         render();
     }, 5000);
@@ -117,12 +132,11 @@ function handleControls(evt){
     } if (evt.target.id === 'double'){
         handleDouble();
     } if (evt.target.id === 'stay'){
-        betBtnDis();
+        hideBetButtons();
         dealerTurn();
     }
 }
 
-//  TODO: Change hide/show buttons functions to 1 function
 function hideBetButtons() {
     const betButtons = document.querySelectorAll('button[id^="bet"]');
     betButtons.forEach(button => {
@@ -143,6 +157,10 @@ function showBetButtons(){
     betButtons.forEach(button =>{
         button.style.display = '';
     })
+    const bossPortraits = document.querySelectorAll('[id=bossportraits]');
+    bossPortraits.forEach(bossPortrait => {
+        bossPortrait.style.display = '';
+    });
     const betTxt = document.getElementById('chooseBetTxt');
     if (betTxt) {
         betTxt.style.display = '';
@@ -151,24 +169,26 @@ function showBetButtons(){
 }
 
 function renderHitStay(){
-    const hitBtn = document.getElementById('hit');
-    if (pHand.amountBet == 0){
-        hitBtn.style.display ='none';
-    } else {
-        hitBtn.style.display = '';
-    };
-    const stayBtn = document.getElementById('stay');
-    if (pHand.amountBet == 0){
-        stayBtn.style.display ='none';
-    } else {
-        stayBtn.style.display = '';
-    };
-    const doubleBtn = document.getElementById('double');
-    if (pHand.amountBet == 0){
-        doubleBtn.style.display ='none';
-    } else {
-        doubleBtn.style.display = '';
-    };
+    setTimeout(() => {
+        const hitBtn = document.getElementById('hit');
+        if (pHand.amountBet == 0){
+            hitBtn.style.display ='none';
+        } else {
+            hitBtn.style.display = '';
+        };
+        const stayBtn = document.getElementById('stay');
+        if (pHand.amountBet == 0){
+            stayBtn.style.display ='none';
+        } else {
+            stayBtn.style.display = '';
+        };
+        const doubleBtn = document.getElementById('double');
+        if (pHand.amountBet == 0){
+            doubleBtn.style.display ='none';
+        } else {
+            doubleBtn.style.display = '';
+        };
+    }, 3000);
 }
 
 function renderMoney(){
@@ -197,9 +217,6 @@ function dealerTurn(){
 }
 
 function endRound() {
-    // setTimeout(() => {
-    //     revealDealer();
-    // }, 2000);
     if (pHand.value > dHand.value && pHand.value <= 21){
         console.log ('playerwins')
         playerWin();
@@ -239,7 +256,6 @@ function tieGame(){
     render();
     getNewShuffledDeck();
     clearCards();
-    handleDeal();
 }
 
 function gameOver(){
@@ -324,14 +340,14 @@ function renderBetButtons(){
     }
 }
 
-function betBtnDis(){
+function betConDis(){
     const betBtns = document.querySelectorAll('#bet-controls button');
     for (const btn of betBtns){
         btn.disabled = true;
     }
 }
 
-function betBtnEn(){
+function betConEn(){
     const betBtns = document.querySelectorAll('#bet-controls button');
     for (const btn of betBtns){
         btn.disabled = false;
@@ -340,9 +356,13 @@ function betBtnEn(){
 
 function renderVS(){
     let img = new Image(),
-    width,
+    width = 100,
     screenWidth = window.innerWidth,
     duration = 5000;
+    img.style.position = 'absolute';
+    img.style.top = '300px';
+    img.style.right = '0';
+    img.id = 'bossVs';
     if (pHand.amountBet === 10) {
         img.src = '../images/bossportraits/wallacevs.png';
     } else if (pHand.amountBet === 100) {
@@ -352,32 +372,24 @@ function renderVS(){
     } else if (pHand.amountBet === 1000) {
         img.src = '../images/bossportraits/scottvs.png';
     } 
-    img.style.zIndex = 100;
     document.body.appendChild(img);
 
- 
     img.onload = function () {
-        width = img.width;
-        animateDealer();
-    };
-
-    function animateDealer() {
-        img.style.right = width + 'px';
-        let currentPosition = parseInt(img.style.right, 10) || 0;
+        let start = Date.now();
 
         function move() {
-            currentPosition += 1;
-            img.style.right = currentPosition + 'px';
+            let timePassed = Date.now() - start;
+            img.style.right = (timePassed / duration) * (screenWidth / 3) + 'px';
 
-            if (currentPosition < screenWidth) {
+            if (timePassed < duration) {
                 requestAnimationFrame(move);
-            } else {
-                // Animation complete
+            } if (timePassed > duration){
+                img.style.display = 'none';
             }
         }
 
         move();
-    }
+    };
 }
 /*----- deck functions -----*/
 function getNewShuffledDeck() {
