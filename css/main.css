@@ -1,15 +1,38 @@
+@font-face {
+  font-family: "Superfly";
+  src: url(../css/font/SUPERFLY.TTF);
+}
 html {
     height: 100%;
     width: 100%;
   }
-main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+#gameboard{
+  width: 70%;
+  height: 55%;
+  background-color: green;
+  background-size: 60px 60px;
+  background-repeat: repeat;
+  border-radius: 200px;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
 }
+
 button {
-    background-color: blue;
-    justify-content: space-around;
+  font-family:"Superfly";
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 30px;
+  background-color: red;
+  color: white;
+  border: none;
+  width: 150px;
   }
 disabled {
     background-color: grey;
@@ -23,6 +46,29 @@ body {
 h2{
   color:white;
 }
+#bossportraits {
+  border-radius: 15px;
+  border: 3px solid grey;
+  width: 150px;
+  height: 150px;
+  margin-bottom: 20px
+}
+
+#bosses{
+  justify-content: space-around;
+  flex-direction: row;
+  display: flex;
+  align-content: center;
+  gap: 40px;
+}
+#bet-amounts{
+  justify-content: space-around;
+  flex-direction: row;
+  display: flex;
+  align-content: center;
+  gap: 47px;
+}
 .face-down {
     background-image: url('../css/card-library/images/backs/ZBackground.png');
 }
+

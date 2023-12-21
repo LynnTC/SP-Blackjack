@@ -11,7 +11,6 @@ let winner;
 let shuffledDeck;
 
 /*----- cached elements  -----*/
-const betBtns = document.querySelectorAll('#bet-amounts > button');
 
 /*----- event listeners -----*/
 document.getElementById('bet-amounts')
@@ -60,7 +59,6 @@ function handleHit(){
         betBtnDis();
         console.log("bust");
         console.log(pHand.value)
-        dealerTurn();
         endRound();
     } else {
         return;
@@ -77,11 +75,7 @@ function handleDouble(){
     pHand.amountBet *= 2
     pHand.value += dealtCard.value;
     betBtnDis();
-    if (pHand.value > 21){
-        endRound();
-    } else {
-        dealerTurn();
-    }
+    endRound();
 }
 
 function init(){
@@ -186,12 +180,17 @@ function dealerTurn(){
         renderDHand(dHand.cards,document.getElementById('dealer-hand'));
         dHand.value += dealtCard.value;
     } if (dHand.value >= 17 ){
-        endRound();
+        revealDealer();
+        setTimeout(() => {
+            endRound();
+        }, 2000);
     }
 }
 
 function endRound() {
-    revealDealer();
+    // setTimeout(() => {
+    //     revealDealer();
+    // }, 2000);
     if (pHand.value > dHand.value && pHand.value <= 21){
         console.log ('playerwins')
         playerWin();
@@ -204,6 +203,8 @@ function endRound() {
     } else if (pHand.value == dHand.value) {
         console.log ('tie')
         tieGame();
+    } else if (pHand.value > 21) {
+        playerLose();
     }
 }
 
@@ -231,6 +232,14 @@ function tieGame(){
     clearCards();
     handleDeal();
 }
+
+function gameOver(){
+    alert('gameover')
+}
+
+function gameUnover(){
+    alert('win')
+}
 function render(){
     renderMoney();
     renderBetButtons();
@@ -245,6 +254,11 @@ function clearCards(){
     dHand.value = 0;
     renderPHand(pHand.cards,document.getElementById('player-hand'));
     renderDHand(dHand.cards,document.getElementById('dealer-hand'));
+    if (money === 0 && pHand.amountBet === 0){
+        gameOver();
+    } if (money === 10000){
+        gameUnover();
+    }
 }
 function renderPHand(hand, container) {
     container.innerHTML = '';
