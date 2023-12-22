@@ -70,12 +70,9 @@ function handleHit() {
     if (pHand.value > 21 && pHand.aces > 0) {
         pHand.value -= 10;
         pHand.aces -= 1;
-        console.log("ace convert");
     }
     if (pHand.value > 21) {
         betConDis();
-        console.log("bust");
-        console.log(pHand.value)
         setTimeout(() => {
             endRound();
         }, 2000);
@@ -90,7 +87,6 @@ function handleDouble() {
     cardSound.play();
     const dealtCard = shuffledDeck.pop();
     pHand.cards.push(dealtCard);
-    console.log(dealtCard);
     renderPHand(pHand.cards, document.getElementById('player-hand'));
     money -= pHand.amountBet
     pHand.amountBet *= 2
@@ -264,7 +260,6 @@ function dealerTurn() {
         cardSound.play();
         const dealtCard = shuffledDeck.pop();
         dHand.cards.push(dealtCard);
-        console.log(dealtCard);
         renderDHand(dHand.cards, document.getElementById('dealer-hand'));
         dHand.value += dealtCard.value;
         setTimeout(() => {
@@ -282,16 +277,12 @@ function dealerTurn() {
 function endRound() {
 
     if (pHand.value > dHand.value && pHand.value <= 21) {
-        console.log('playerwins')
         playerWin();
     } else if (pHand.value < dHand.value && dHand.value <= 21) {
-        console.log('dealer wins')
         playerLose();
     } else if (pHand.value <= 21 && dHand.value > 21) {
-        console.log('player wins')
         playerWin();
     } else if (pHand.value == dHand.value) {
-        console.log('tie')
         tieGame();
     } else if (pHand.value > 21) {
         revealDealer();
