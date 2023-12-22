@@ -45,9 +45,9 @@ function handleDeal() {
     } 
     pHand.value = pHand.cards[0].value + pHand.cards[1].value
     dHand.value = dHand.cards[0].value + dHand.cards[1].value
-    if (pHand.value === 21 && pHand.cards.length === 2) {
+    if (pHand.value === 21 && pHand.cards.length === 2 && dHand.cards.length === 2) {
+        revealDealer();
         setTimeout(() => {
-            revealDealer();
             endRound();
         }, 2000);
     }
@@ -283,7 +283,7 @@ function dealerTurn() {
 }
 
 function endRound() {
-
+    pHand.aces = 0;
     if (pHand.value > dHand.value && pHand.value <= 21) {
         playerWin();
     } else if (pHand.value < dHand.value && dHand.value <= 21) {
