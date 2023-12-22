@@ -29,18 +29,27 @@ init();
 
 function handleDeal() {
     let dealtCard = 0;
-    while (pHand.cards.length < 2) {
-        const dealtCard = shuffledDeck.pop();
+    if (pHand.cards.length < 2) {
+        dealtCard = shuffledDeck.pop();
+        if (dealtCard.face.includes('A')) {
+            pHand.aces += 1;
+        }
+        console.log(dealtCard);
         pHand.cards.push(dealtCard);
+        handleDeal();
     }
-    while (dHand.cards.length < 2) {
+    if (dHand.cards.length < 2) {
         const dealtCard = shuffledDeck.pop();
         dHand.cards.push(dealtCard);
+        handleDeal();
     } 
     pHand.value = pHand.cards[0].value + pHand.cards[1].value
     dHand.value = dHand.cards[0].value + dHand.cards[1].value
     if (pHand.value === 21 && pHand.cards.length === 2) {
-        endRound();
+        setTimeout(() => {
+            revealDealer();
+            endRound();
+        }, 2000);
     }
     hideBetButtons();
     betConEn();
@@ -54,7 +63,6 @@ function handleDeal() {
     }, 2000);
     setTimeout(() => {
         renderHitStay();
-
     }, 3000);
 }
 
@@ -64,14 +72,14 @@ function handleHit() {
     renderPHand(pHand.cards, document.getElementById('player-hand'));
     pHand.value += dealtCard.value;
     cardSound.play();
-    if (dealtCard.face === 'A') {
+    console.log(dealtCard);
+    if (dealtCard.face.includes('A')) {
         pHand.aces += 1;
     }
-    if (pHand.value > 21 && pHand.aces > 0) {
+     if (pHand.value > 21 && pHand.aces > 0) {
         pHand.value -= 10;
         pHand.aces -= 1;
-    }
-    if (pHand.value > 21) {
+    } else if (pHand.value > 21) {
         betConDis();
         setTimeout(() => {
             endRound();
