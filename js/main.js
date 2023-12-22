@@ -202,17 +202,17 @@ function renderMoney(){
     coinEl.innerHTML = '';
         for (let i = 0; i < coins[0]; i++) {
             const bigCoinImg = document.createElement('img');
-            bigCoinImg.src = '../images/coins/1000.png';
+            bigCoinImg.src = 'images/coins/1000.png';
             coinEl.appendChild(bigCoinImg);
         }
         for (let i = 0; i < coins[1]; i++) {
             const medCoinImg = document.createElement('img');
-            medCoinImg.src = '../images/coins/100.png';
+            medCoinImg.src = 'images/coins/100.png';
             coinEl.appendChild(medCoinImg);
         }
         for (let i = 0; i < coins[2]; i++) {
             const amountCoinImg = document.createElement('img');
-            amountCoinImg.src = '../images/coins/10.png';
+            amountCoinImg.src = 'images/coins/10.png';
             coinEl.appendChild(amountCoinImg);
         }
     }
