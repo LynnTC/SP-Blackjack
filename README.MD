@@ -23,3 +23,6 @@ a simple game of 21 or blackjack with theming after the show Scott Pilgrim Takes
 * Adding player avatar images
 * Adding additional animation when choosing, winning, or losing against a dealer
 * Adding an initial start game function that also adds background music to the first screen
+
+# Known Bugs
+* On rare and random occasions the dealerVs portait will remain
