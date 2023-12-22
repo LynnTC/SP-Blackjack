@@ -96,6 +96,8 @@ function handleDouble() {
     pHand.amountBet *= 2
     pHand.value += dealtCard.value;
     betConDis();
+    renderMoney();
+    renderBetCoins();
     setTimeout(() => {
         dealerTurn();
     }, 1000);
