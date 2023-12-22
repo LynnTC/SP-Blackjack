@@ -34,7 +34,6 @@ function handleDeal() {
         if (dealtCard.face.includes('A')) {
             pHand.aces += 1;
         }
-        console.log(dealtCard);
         pHand.cards.push(dealtCard);
         handleDeal();
     }
@@ -72,7 +71,6 @@ function handleHit() {
     renderPHand(pHand.cards, document.getElementById('player-hand'));
     pHand.value += dealtCard.value;
     cardSound.play();
-    console.log(dealtCard);
     if (dealtCard.face.includes('A')) {
         pHand.aces += 1;
     }
