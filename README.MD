@@ -18,6 +18,7 @@ a simple game of 21 or blackjack with theming after the show Scott Pilgrim Takes
 # Next Steps
 * Making currency stack on top of each other
 * Improving CSS for Win/Loss messages
+* Improving images/look of board
 * Adding images for the current dealer you are playing against
 * Adding player avatar images
 * Adding additional animation when choosing, winning, or losing against a dealer
