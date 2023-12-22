@@ -1,0 +1,33 @@
+define required constants
+    define card values/deck
+    define player and dealer
+
+define state of game variables
+    define starting money
+    player or dealers turn
+    amount bet
+    deal starting hand to player/dealer
+    (Opt: check if hand can be split)
+
+display player cards face up
+display dealers cards 1 up and 1 down
+
+deal random card from the deck
+
+buttons for hit/stay
+
+check for bust or 21
+
+determine winner if player busts
+
+if player stands dealer logic
+    dealer stands at 17 and above
+    dealer hits if 16 or below
+
+determine winner based on dealers play
+
+display game results
+
+return to betting phase with updated game state.
+
+

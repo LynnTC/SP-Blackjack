@@ -195,8 +195,34 @@ function renderHitStay(){
 }
 
 function renderMoney(){
+    const coinEl = document.getElementById(`coinsDisplay`);
+    const coins = returnCoins(money);
     const moneyEl = document.getElementById(`playMoney`);
     moneyEl.innerText = money;
+    coinEl.innerHTML = '';
+        for (let i = 0; i < coins[0]; i++) {
+            const bigCoinImg = document.createElement('img');
+            bigCoinImg.src = '../images/coins/1000.png';
+            coinEl.appendChild(bigCoinImg);
+        }
+        for (let i = 0; i < coins[1]; i++) {
+            const medCoinImg = document.createElement('img');
+            medCoinImg.src = '../images/coins/100.png';
+            coinEl.appendChild(medCoinImg);
+        }
+        for (let i = 0; i < coins[2]; i++) {
+            const amountCoinImg = document.createElement('img');
+            amountCoinImg.src = '../images/coins/10.png';
+            coinEl.appendChild(amountCoinImg);
+        }
+    }
+
+function returnCoins(amount) {
+    let bigC = (amount - (amount % 1000))/1000;
+    amount %= 1000;
+    var midC = (midC - (midC % 100))/100;
+    amount %= 100;
+    return [bigC, midC, amount];
 }
 
 function renderBet(){
@@ -205,13 +231,14 @@ function renderBet(){
 }
 
 function dealerTurn(){
-    while (dHand.value < 17){
+    if(dHand.value < 17){
         setTimeout(() => {
             const dealtCard = shuffledDeck.pop();
             dHand.cards.push(dealtCard);
             console.log(dealtCard);
             renderDHand(dHand.cards,document.getElementById('dealer-hand'));
             dHand.value += dealtCard.value;
+            dealerTurn();
         }, 2000);
     } if (dHand.value >= 17 ){
         revealDealer();
@@ -299,10 +326,8 @@ function clearCards(){
     dHand.value = 0;
     renderPHand(pHand.cards,document.getElementById('player-hand'));
     renderDHand(dHand.cards,document.getElementById('dealer-hand'));
-    if (money === 0 && pHand.amountBet === 0){
+    if (money <= 0 && pHand.amountBet <= 0){
         gameOver();
-    } if (money === 10000){
-        gameUnover();
     }
 }
 function renderPHand(hand, container) {
