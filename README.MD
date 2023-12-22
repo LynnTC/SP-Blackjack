@@ -3,8 +3,8 @@
 a simple game of 21 or blackjack with theming after the show Scott Pilgrim Takes Off, though does include elements from other Scott Pilgrim media.
 
 # Screenshots
-[Imgur](https://i.imgur.com/uRbKp6M.png)
-[Imgur](https://i.imgur.com/PJry4hm.png)
+![Imgur](https://i.imgur.com/uRbKp6M.png)
+![Imgur](https://i.imgur.com/PJry4hm.png)
 
 # Technologies Used
 * Javascript
