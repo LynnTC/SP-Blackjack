@@ -2,12 +2,12 @@
 const suits = ['s', 'c', 'd', 'h']
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 const originalDeck = buildOriginalDeck();
-const vsSound = new Audio('../css/audio-library/verses.wav');
-const cardSound = new Audio('../css/audio-library/cardsound.mp3');
-const gideonSound = new Audio('../css/audio-library/gideonbg.wav');
-const lucasSound = new Audio('../css/audio-library/lucasbg.wav');
-const wallaceSound = new Audio('../css/audio-library/wallacebg.wav');
-const scottSound = new Audio('../css/audio-library/scottbg.wav');
+const vsSound = new Audio('css/audio-library/verses.wav');
+const cardSound = new Audio('css/audio-library/cardsound.mp3');
+const gideonSound = new Audio('css/audio-library/gideonbg.wav');
+const lucasSound = new Audio('css/audio-library/lucasbg.wav');
+const wallaceSound = new Audio('css/audio-library/wallacebg.wav');
+const scottSound = new Audio('css/audio-library/scottbg.wav');
 /*----- state variables -----*/
 let money;
 let pHand;
@@ -409,17 +409,17 @@ function renderVS(){
     img.style.right = '0';
     img.id = 'bossVs';
     if (pHand.amountBet === 10) {
-        img.src = '../images/bossportraits/wallacevs.png';
+        img.src = 'images/bossportraits/wallacevs.png';
         setTimeout(() => {
             wallaceSound.play();
         }, 8000);
     } else if (pHand.amountBet === 100) {
-        img.src = '../images/bossportraits/lucasvs.png';
+        img.src = 'images/bossportraits/lucasvs.png';
         setTimeout(() => {
             lucasSound.play();
         }, 8000);
     } else if (pHand.amountBet === 500) {
-        img.src = '../images/bossportraits/gideonvs.png';
+        img.src = 'images/bossportraits/gideonvs.png';
         setTimeout(() => {
             gideonSound.play();
         }, 8000);
@@ -427,7 +427,7 @@ function renderVS(){
         setTimeout(() => {
            scottSound.play();
         }, 8000);
-        img.src = '../images/bossportraits/scottvs.png';
+        img.src = 'images/bossportraits/scottvs.png';
     } 
     document.body.appendChild(img);
 
